@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample</title>
+    <script>
+        function showClinicalTNM() {
+            const familyHistory = document.querySelector('input[name="family-history"]:checked').value;
+            const clinicalTNMSection = document.getElementById('clinical-tnm-section');
+
+            if (familyHistory === 'yes') {
+                clinicalTNMSection.style.display = 'block';
+            } else {
+                clinicalTNMSection.style.display = 'none';
+            }
+        }
+
+        function calculateAge() {
+            const dobInput = document.getElementById('dob');
+            const ageOutput = document.getElementById('age');
+
+            const dob = new Date(dobInput.value);
+            const today = new Date();
+            const age = today.getFullYear() - dob.getFullYear();
+            ageOutput.textContent = age;
+        }
+
+        function showStageAndTreatment() {
+            const firstName = document.getElementById('first-name').value;
+            const gender = document.getElementById('gender').value;
+            const maritalStatus = document.getElementById('marital-status').value;
+            const dob = document.getElementById('dob').value;
+            const stageSelect = document.getElementById('stage');
+            const clinicalTNMSection = document.getElementById('clinical-tnm-section');
+            const clinicalTNM = clinicalTNMSection.style.display === 'block' ? clinicalTNMSection.querySelector('select').value : 'Not provided';
+            const organ = document.getElementById('organ').value;
+            const resultMessage = document.getElementById('result-message');
+            const errorMessages = [];
+
+            if (firstName === '') {
+                errorMessages.push('Please enter your first name.');
+            }
+            if (gender === 'Select Option') {
+                errorMessages.push('Please select your gender.');
+            }
+            if (maritalStatus === 'Select Option') {
+                errorMessages.push('Please select your marital status.');
+            }
+            if (dob === '') {
+                errorMessages.push('Please enter your date of birth.');
+            }
+            if (stageSelect.value === 'Select Option') {
+                errorMessages.push('Please select a stage.');
+            }
+
+            if (errorMessages.length > 0) {
+                resultMessage.innerHTML = errorMessages.map(msg => `<p style="color: red">${msg}</p>`).join('');
+                return;
+            }
+
+            const stage = stageSelect.value;
+            const age = parseInt(document.getElementById('age').textContent);
+
+            const stageInfo = {
+                '0': 'Stage 0 - Tis(DCIS) N0 M0',
+                '1': 'Stage 0 - Tis(LCIS) N0 M0',
+                '2': 'Stage IA - T1 N0 M0',
+                '3': 'Stage IB - T0 N1mi M0',
+                '4': 'Stage IB - T1 N1mi M0',
+                '5': 'Stage IIA - T0 N1 M0',
+                '6': 'Stage IIA - T1 N1 M0',
+                '7': 'Stage IIA - T2 N0 M0',
+                '8': 'Stage IIB - T2 N1 M0',
+                '9': 'Stage IIB - T3 N0 M0',
+            };
+
+            const treatmentMessage = 'Meet Dr. Sujit Mouli as soon as possible! You will be fine!';
+            let message = `<b>Name:</b> ${firstName}<br><br><b>Age:</b> ${age} Years <br><br><b>Stage:</b> ${stageInfo[stage]}.<br><br><b>Treatment:</b> ${treatmentMessage}`;
+            
+            if (clinicalTNM !== 'Not provided') {
+                message += `<br><br><b>Family History - First Degree Blood Relative:</b> ${clinicalTNM}`;
+            }
+            
+            message += `<br><br><b>Family History - Second Degree Blood Relative:</b> ${document.getElementById('second-degree-family-history').value}`;
+            message += `<br><br><b>Organ:</b> ${organ}`;
+
+            resultMessage.innerHTML = message;
+        }
+    </script>
+</head>
+<body>
+    <center>
+        <h1>
+            <u>DISEASES FOUND WITH THEIR SYMPTOMS</u>
+        </h1>
+    </center>
+    <div class="container" style="padding: 5%;">
+        <form action="" class="cls">
+            <label>Name:</label>
+            <input type="text" id="first-name" placeholder="Enter Your First Name" />
+            <br><br>
+            <label>Gender:</label>
+            <select id="gender">
+                <option value="Select Option">Select Option</option>
+                <option value="Female">Female</option>
+                <option value="Transgender">Transgender</option>
+            </select>
+            <br><br>
+            <label>Marital Status:</label>
+            <select id="marital-status">
+                <option value="Select Option">Select Option</option>
+                <option value="Single">Single</option>
+                <option value="Married">Married</option>
+                <option value="Divorced">Divorced</option>
+                <option value="Widowed">Widowed</option>
+            </select>
+            <br><br>
+            <label>DOB:</label>
+            <input type="date" id="dob" placeholder="Enter Your DOB" onchange="calculateAge()" />
+            <span id="age"></span>
+            <br><br>
+            <label>Organ:</label>
+            <select id="organ">
+                <option value="Select Option">Select Option</option>
+                <option value="Lung">Lung</option>
+                <option value="Organ2">Organ 2</option>
+            </select>
+            <br><br>
+            <label>Family History of Cancer:</label>
+            <input type="radio" name="family-history" value="yes" onchange="showClinicalTNM()"> Yes
+            <input type="radio" name="family-history" value="no" onchange="showClinicalTNM()"> No
+            <br><br>
+            <div id="clinical-tnm-section" style="display: none;">
+                <label>Family History - First Degree Blood Relative:</label>
+                <select>
+                    <option value="Select Option">Select Option</option>
+                    <option value="Mother">Mother</option>
+                    <option value="Father">Father</option>
+                    <option value="Brother">Brother</option>
+                    <option value="Sister">Sister</option>
+                    <option value="Daughter">Daughter</option>
+                    <option value="Son">Son</option>
+                </select>
+                <br><br>
+                <label>Family History - Second Degree Blood Relative:</label>
+                <select id="second-degree-family-history">
+                    <option value="Select Option">Select Option</option>
+                    <option value="Grand-mother">Grand-mother</option>
+                    <option value="Aunt">Aunt</option>
+                    <option value="Niece">Niece</option>
+                    <option value="Grand-daughter">Grand-daughter</option>
+                    <option value="Grand-father">Grand-father</option>
+                    <option value="Uncle">Uncle</option>
+                </select>
+                <br><br>
+            </div>
+            <label>Clinical TNM Sub Stage:</label>
+            <select id="stage" onchange="showStageAndTreatment()">
+                <option value="Select Option">Select Option</option>
+                <option value="0">Stage 0 - Tis(DCIS) N0 M0</option>
+                <option value="1">Stage 0 - Tis(LCIS) N0 M0</option>
+                <option value="3">Stage IA - T1 N0 M0</option>
+                <option value="4">Stage IB - T0 N1mi M0</option>
+                <option value="5">Stage IB - T1 N1mi M0</option>
+                <option value="6">Stage IIA - T0 N1 M0</option>
+                <option value="7">Stage IIA - T1 N1 M0</option>
+                <option value="8">Stage IIA - T2 N0 M0</option>
+                <option value="9">Stage IIB - T2 N1 M0</option>
+            </select>
+            <br><br>
+            <button type="button" onclick="showStageAndTreatment()">Submit</button>
+        </form>
+        <div class="resuk" style="border: 1px solid black;width: 75%;height:auto;margin:3%;padding:1%;">
+            <center><h3><u>SUJIT HOSPITAL REPORT</u></h3></center>
+            <div id="result-message"></div>
+        </div>
+    </div>
+</body>
+</html>
